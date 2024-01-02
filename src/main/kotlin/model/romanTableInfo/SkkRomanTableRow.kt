@@ -4,7 +4,7 @@ package model.romanTableInfo
  * SKKのローマ字テーブル設定の情報を格納する。
  * 各変数が各列に対応する。
  */
-data class SkkRomanTableInfo (
+data class SkkRomanTableRow (
     /**
      * ローマ字
      */
@@ -32,4 +32,4 @@ data class SkkRomanTableInfo (
      * 促音/撥音(ん)+待機:3
      */
     val mode: Int
-): IRomanTableInfo
+): IRomanTableRow

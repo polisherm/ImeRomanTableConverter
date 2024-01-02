@@ -2,7 +2,7 @@ package model.converter
 
 import model.ImeType
 import model.importer.IImeRomanTableImporter
-import model.romanTableInfo.IRomanTableInfo
+import model.romanTableInfo.IRomanTableRow
 
 /**
  * ローマ字テーブル変換器のインターフェース
@@ -19,5 +19,5 @@ interface IImeRomanTableConverter {
      * @param romanTableInfo
      * @return 変換後のローマ字テーブル
      */
-    fun convert(romanTableInfoList: MutableList<IRomanTableInfo>, convertTo: ImeType): String
+    fun convert(romanTableInfoList: MutableList<IRomanTableRow>, convertTo: ImeType): String
 }

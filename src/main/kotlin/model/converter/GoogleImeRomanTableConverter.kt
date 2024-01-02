@@ -1,18 +1,17 @@
 package model.converter
 
-import ConverterUtil
 import model.ImeType
 import model.importer.GoogleImeRomanTableImporter
 import model.importer.IImeRomanTableImporter
-import model.romanTableInfo.GoogleRomanTableInfo
-import model.romanTableInfo.IRomanTableInfo
-import model.romanTableInfo.SkkRomanTableInfo
+import model.romanTableInfo.GoogleRomanTableRow
+import model.romanTableInfo.IRomanTableRow
+import model.romanTableInfo.SkkRomanTableRow
 
 class GoogleImeRomanTableConverter: IImeRomanTableConverter {
     override val importer: IImeRomanTableImporter = GoogleImeRomanTableImporter()
 
-    override fun convert(romanTableInfoList: MutableList<IRomanTableInfo>, convertTo: ImeType): String {
-        if (romanTableInfoList[0] !is GoogleRomanTableInfo) {
+    override fun convert(romanTableInfoList: MutableList<IRomanTableRow>, convertTo: ImeType): String {
+        if (romanTableInfoList[0] !is GoogleRomanTableRow) {
             throw IllegalArgumentException("GoogleRomanTableInfo型のみを許容します。")
         }
 
@@ -24,12 +23,12 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
 
     }
 
-    private fun convertToSkk(googleRomanTableInfoList: MutableList<IRomanTableInfo>):String {
-        val skkRomanTableInfoList = mutableListOf<SkkRomanTableInfo>()
+    private fun convertToSkk(googleRomanTableInfoList: MutableList<IRomanTableRow>):String {
+        val skkRomanTableInfoList = mutableListOf<SkkRomanTableRow>()
 
         googleRomanTableInfoList.forEach {
             // HACK: 不恰好なキャスト。しないで解決した方がいい。
-            it as GoogleRomanTableInfo
+            it as GoogleRomanTableRow
 
             // 「次の入力」が存在する場合はスキップする。
             if (it.nextInput != "") {
@@ -41,7 +40,7 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
             val katakana = convertToKatakana(hiragana)
             val halfWidthKana = convertToHalfWidthKana(katakana)
 
-            val skkRomanTableInfo = SkkRomanTableInfo(
+            val skkRomanTableInfo = SkkRomanTableRow(
                 romanAlphabet,
                 hiragana,
                 katakana,
@@ -104,8 +103,8 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
      * SKKの促音設定に則した設定リストを返す。
      * TODO: SKK固有の処理なのでここに置くべきでない。
      */
-    private fun createSkkSokuonList(): List<SkkRomanTableInfo> {
-        val result = mutableListOf<SkkRomanTableInfo>()
+    private fun createSkkSokuonList(): List<SkkRomanTableRow> {
+        val result = mutableListOf<SkkRomanTableRow>()
         SkkSokuon.entries.forEach {
             val romanAlphabet = it.name
             val hiragana = "っ"
@@ -114,7 +113,7 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
             val mode = 1
 
             result.add(
-                SkkRomanTableInfo(
+                SkkRomanTableRow(
                     romanAlphabet,
                     hiragana,
                     katakana,
@@ -127,12 +126,12 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
         return result.toList()
     }
 
-    private fun createSkkSymbolList(): List<SkkRomanTableInfo> {
-        val result = mutableListOf<SkkRomanTableInfo>()
+    private fun createSkkSymbolList(): List<SkkRomanTableRow> {
+        val result = mutableListOf<SkkRomanTableRow>()
 
         Symbol.entries.forEach {
             result.add(
-                SkkRomanTableInfo(
+                SkkRomanTableRow(
                     it.symbol,
                     it.fullWidth,
                     it.fullWidth,

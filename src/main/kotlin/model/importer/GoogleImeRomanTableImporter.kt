@@ -1,7 +1,7 @@
 package model.importer
 
-import model.romanTableInfo.GoogleRomanTableInfo
-import model.romanTableInfo.IRomanTableInfo
+import model.romanTableInfo.GoogleRomanTableRow
+import model.romanTableInfo.IRomanTableRow
 import java.io.File
 
 class GoogleImeRomanTableImporter: IImeRomanTableImporter {
@@ -27,12 +27,12 @@ class GoogleImeRomanTableImporter: IImeRomanTableImporter {
                 ""
             }
 
-            tableInfoList.add(GoogleRomanTableInfo(input, export, nextInput))
+            tableInfoList.add(GoogleRomanTableRow(input, export, nextInput))
         }
     }
 
     /**
      * Google日本語入力のローマ字テーブル設定の情報を格納するリスト
      */
-    override val tableInfoList: MutableList<IRomanTableInfo> = mutableListOf()
+    override val tableInfoList: MutableList<IRomanTableRow> = mutableListOf()
 }

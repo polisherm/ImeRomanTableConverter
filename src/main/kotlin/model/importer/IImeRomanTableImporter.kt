@@ -1,10 +1,10 @@
 package model.importer
 
-import model.romanTableInfo.IRomanTableInfo
+import model.romanTableInfo.IRomanTableRow
 import java.io.File
 
 interface IImeRomanTableImporter {
-    val tableInfoList: MutableList<IRomanTableInfo>
+    val tableInfoList: MutableList<IRomanTableRow>
 
     /**
      * ローマ字テーブルをインポートして情報を抽出する。

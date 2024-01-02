@@ -4,7 +4,7 @@ package model.romanTableInfo
  * Google日本語入力のローマ字テーブル設定の情報を格納する。
  * 各変数が各列に対応する。
  */
-data class GoogleRomanTableInfo(
+data class GoogleRomanTableRow(
     /**
      * 「入力」
      */
@@ -25,4 +25,4 @@ data class GoogleRomanTableInfo(
      * (柔軟な設定ができるとも言える)
      */
     val nextInput: String
-): IRomanTableInfo
+): IRomanTableRow
