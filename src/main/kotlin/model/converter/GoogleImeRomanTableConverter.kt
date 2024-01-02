@@ -51,11 +51,17 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
             skkRomanTableInfoList.add(skkRomanTableInfo)
         }
 
-        // tt->っt としてくれる機能はSKKでは促音モードをオンにする必要がある。
-        // Google日本語入力も「次の入力」という機能を用いて設定する必要があるが、
-        // これはSKKの促音モードに完全一致する機能ではない。
-        // 従って、Google日本語入力の「次の入力」機能は無視して、プログラム上で設定を作成する。
+        // NOTE:
+        //  tt->っt としてくれる機能はSKKでは促音モードをオンにする必要がある。
+        //  Google日本語入力も「次の入力」という機能を用いて設定する必要があるが、
+        //  これはSKKの促音モードに完全一致する機能ではない。
+        //  従って、Google日本語入力の「次の入力」機能は無視して、プログラム上で設定を作成する。
         skkRomanTableInfoList.addAll(createSkkSokuonList())
+
+        // NOTE:
+        //  SKKでは記号類もローマ字テーブルに設定する必要がある。
+        //  IMEオンの状態なら全ての記号を全角として出力するようにしている。 （CorvusSKKのデフォルトとは違う設定）
+        skkRomanTableInfoList.addAll(createSkkSymbolList())
 
         // skkRomanTableInfoListの内容をタブ区切りのStringにして返す。
         // 重複は削除する。
@@ -121,25 +127,84 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
         return result.toList()
     }
 
-    // TODO: SKKの設定なのでこのクラス内に置くべきでない。
-    private enum class SkkSokuon(sokuon: String) {
-        // 列挙子名をそのまま使うのでコーディング規約に則らない。(大文字にしない)
-        bb("っ"),
-        cc("っ"),
-        dd("っ"),
-        ff("っ"),
-        gg("っ"),
-        hh("っ"),
-        jj("っ"),
-        kk("っ"),
-        pp("っ"),
-        rr("っ"),
-        ss("っ"),
-        tt("っ"),
-        vv("っ"),
-        ww("っ"),
-        xx("っ"),
-        yy("っ"),
-        zz("っ")
+    private fun createSkkSymbolList(): List<SkkRomanTableInfo> {
+        val result = mutableListOf<SkkRomanTableInfo>()
+
+        Symbol.entries.forEach {
+            result.add(
+                SkkRomanTableInfo(
+                    it.symbol,
+                    it.fullWidth,
+                    it.fullWidth,
+                    it.fullWidth,
+                    0
+                )
+            )
+        }
+
+        return result.toList()
     }
+
+    // TODO: SKKの設定なのでこのクラス内に置くべきでない。
+    private enum class SkkSokuon() {
+        // 列挙子名をそのまま使うのでコーディング規約に則らない。(大文字にしない)
+        bb,
+        cc,
+        dd,
+        ff,
+        gg,
+        hh,
+        jj,
+        kk,
+        pp,
+        rr,
+        ss,
+        tt,
+        vv,
+        ww,
+        xx,
+        yy,
+        zz
+    }
+
+    /**
+     * SKKの場合は記号類もローマ字テーブルとして設定する必要がある
+     * TODO: SKKの設定なのでこのクラス内に置くべきでない。
+     */
+    private enum class Symbol(val symbol: String, val fullWidth: String) {
+        EXCLAMATION("!", "！"),
+        DOUBLE_QUOTE("\"\"","”"),
+        HASH("#", "＃"),
+        DOLLAR("$", "＄"),
+        PERCENT("%", "％"),
+        AMPERSAND("&", "＆"),
+        SINGLE_QUOTE("'", "’"),
+        LEFT_PARENTHESIS("(", "（"),
+        RIGHT_PARENTHESIS(")", "）"),
+        ASTERISK("*", "＊"),
+        PLUS("+", "＋"),
+        COMMA(",", "、"),
+        MINUS("-", "ー"),
+        PERIOD(".", "。"),
+        SLASH("/", "・"),
+        COLON(":", "："),
+        SEMICOLON(";", "；"),
+        LESS_THAN("<", "＜"),
+        EQUAL("=", "＝"),
+        GREATER_THAN(">", "＞"),
+        QUESTION("?", "？"),
+        AT_SIGN("@", "＠"),
+        LEFT_BRACKET("[", "「"),
+        BACK_SLASH("\\", "￥"),
+        RIGHT_BRACKET("]", "」"),
+        CARET("^", "＾"),
+        UNDER_SCORE("_", "＿"),
+        GRAVE("`", "｀"),
+        LEFT_BRACE("{", "｛"),
+        PIPE("|", "｜"),
+        RIGHT_BRACE("}", "｝"),
+        TILDE("~", "～"),
+
+    }
+
 }
