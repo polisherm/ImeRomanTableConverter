@@ -62,6 +62,9 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
         //  IMEオンの状態なら全ての記号を全角として出力するようにしている。 （CorvusSKKのデフォルトとは違う設定）
         skkRomanTableInfoList.addAll(createSkkSymbolList())
 
+        // 同じく数字もローマ字テーブルに含めなければならない。
+        skkRomanTableInfoList.addAll(createNumberList())
+
         // skkRomanTableInfoListの内容をタブ区切りのStringにして返す。
         // 重複は削除する。
         return skkRomanTableInfoList.distinct().joinToString("\n") {
@@ -144,6 +147,24 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
         return result.toList()
     }
 
+    private fun createNumberList(): List<SkkRomanTableRow> {
+        val result = mutableListOf<SkkRomanTableRow>()
+
+        Number.entries.forEach {
+            result.add(
+                SkkRomanTableRow(
+                    it.number,
+                    it.number,
+                    it.number,
+                    it.number,
+                    0
+                )
+            )
+        }
+
+        return result.toList()
+    }
+
     // TODO: SKKの設定なのでこのクラス内に置くべきでない。
     private enum class SkkSokuon() {
         // 列挙子名をそのまま使うのでコーディング規約に則らない。(大文字にしない)
@@ -203,7 +224,23 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
         PIPE("|", "｜"),
         RIGHT_BRACE("}", "｝"),
         TILDE("~", "～"),
+        SPACE(" ", " ") // 空白は記号ではないがここに入れておく。SKKでは空白もローマ字テーブルに置いておく必要がある。
+    }
 
+    /**
+     * 同じく数字もローマ字テーブルに含めなければならない。
+     */
+    private enum class Number(val number: String) {
+        ZERO("0"),
+        ONE("1"),
+        TWO("2"),
+        THREE("3"),
+        FOUR("4"),
+        FIVE("5"),
+        SIX("6"),
+        SEVEN("7"),
+        EIGHT("8"),
+        NINE("9")
     }
 
 }
