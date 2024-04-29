@@ -1,5 +1,6 @@
 package model.converter
 
+import com.ibm.icu.text.Transliterator
 import model.ImeType
 import model.importer.GoogleImeRomanTableImporter
 import model.importer.IImeRomanTableImporter
@@ -9,6 +10,11 @@ import model.romanTableInfo.SkkRomanTableRow
 
 class GoogleImeRomanTableConverter: IImeRomanTableConverter {
     override val importer: IImeRomanTableImporter = GoogleImeRomanTableImporter()
+
+    /**
+     * 全角半角変換器
+     */
+    private val transliterator = Transliterator.getInstance("Fullwidth-Halfwidth")
 
     override fun convert(romanTableInfoList: MutableList<IRomanTableRow>, convertTo: ImeType): String {
         if (romanTableInfoList[0] !is GoogleRomanTableRow) {
@@ -92,14 +98,10 @@ class GoogleImeRomanTableConverter: IImeRomanTableConverter {
      * カタカナ以外が来た場合は元の文字を返す。
      */
     private fun convertToHalfWidthKana(katakana: String): String {
-        return katakana.map {
-            val char = it.code
-            if (char in 0x30A1..0x30F6) {
-                (char - 0x60).toChar()
-            } else {
-                it
-            }
-        }.joinToString("")
+        if (!katakana.codePoints().anyMatch { it in 0x30A1..0x30FA }) {
+            return katakana
+        }
+        return transliterator.transliterate(katakana)
     }
 
     /**
